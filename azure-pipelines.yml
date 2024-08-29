@@ -20,7 +20,7 @@ stages:
         command: 'package'
         chartPath: '/home/vsts/work/1/s/az-cas'
         chartNameForACR: 'az-cas-helm'
-        chartPathForACR: '$(System.DefaultWorkingDirectory)/drophelm/Charts/az-cas'
+        chartPathForACR: '/path/to/helm-charts/my-chart'
     - task: PublishPipelineArtifact@1
       inputs:
         targetPath: '$(Pipeline.Workspace)'

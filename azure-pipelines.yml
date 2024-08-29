@@ -39,7 +39,7 @@ stages:
         kubernetesCluster: 'akstf'
         command: 'upgrade'
         chartType: 'FilePath'
-        chartPath: '$(Pipeline.Workspace)/HelmChart/az-cas-0.1.0.tgz'
+        chartPath: '/home/vsts/work/1/s/az-cas'
         releaseName: 'az-cas'
     
 

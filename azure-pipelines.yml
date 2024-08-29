@@ -1,30 +1,45 @@
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
-
 trigger:
 - master
 
 pool:
   vmImage: ubuntu-latest
 
-steps:
-- task: HelmInstaller@1
-  inputs:
-    helmVersionToInstall: 'latest'
-- task: HelmDeploy@1
-  inputs:
-    azureSubscriptionForACR: 'spconnection'
-    azureResourceGroupForACR: 'rgterra'
-    azureContainerRegistry: 'kubeacr1.azurecr.io'
-    command: 'package'
-    chartPath: '/home/vsts/work/1/s/az-cas'
-    chartNameForACR: 'az-cas-helm'
-    chartPathForACR: '$(System.DefaultWorkingDirectory)/drophelm/Charts/az-cas'
-- task: PublishPipelineArtifact@1
-  inputs:
-    targetPath: '$(Pipeline.Workspace)'
-    artifact: 'drophelm'
-    publishLocation: 'pipeline'
+stages:
+- stage: Build
+  jobs:
+  - job: PackageHelmChart
+    steps:
+    - task: HelmInstaller@1
+      inputs:
+        helmVersionToInstall: 'latest'
+    - task: HelmDeploy@1
+      inputs:
+        azureSubscriptionForACR: 'spconnection'
+        azureResourceGroupForACR: 'rgterra'
+        azureContainerRegistry: 'kubeacr1.azurecr.io'
+        command: 'package'
+        chartPath: '/home/vsts/work/1/s/az-cas'
+        chartNameForACR: 'az-cas-helm'
+        chartPathForACR: '$(System.DefaultWorkingDirectory)/drophelm/Charts/az-cas'
+    - task: PublishPipelineArtifact@1
+      inputs:
+        targetPath: '$(Pipeline.Workspace)'
+        artifact: 'drophelm'
+        publishLocation: 'pipeline'
+
+- stage: Deploy
+  jobs:
+  - job: DeployToAKS
+    steps:
+    - task: HelmDeploy@1
+      inputs:
+        connectionType: 'Azure Resource Manager'
+        azureSubscription: 'spconnection'
+        azureResourceGroup: 'rgterra'
+        kubernetesCluster: 'akstf'
+        command: 'upgrade'
+        chartType: 'FilePath'
+        chartPath: '$(Pipeline.Workspace)/drophelm/Charts/az-cas'
+        releaseName: 'az-cas'
+    
 

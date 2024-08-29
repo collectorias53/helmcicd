@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "az-cas.fullname" . }}
+  labels:
+    app: {{ include "az-cas.name" . }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ include "az-cas.name" . }}
+  template:
+    metadata:
+      labels:
+        app: {{ include "az-cas.name" . }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.service.targetPort }}
+          resources:
+            requests:
+              cpu: "100m"   # Request 100 millicores (0.1 cores) of CPU
+            limits:
+              cpu: "200m"   # Limit the CPU usage to 200 millicores (0.2 cores)
+          env:
+            - name: AZURE_KEY_VAULT_URL
+              value: {{ .Values.env.AZURE_KEY_VAULT_URL }}
+            - name: DB_NAME
+              value: {{ .Values.env.DB_NAME }}
+            - name: DB_USER
+              value: {{ .Values.env.DB_USER }}
+            - name: DB_PASSWORD
+              value: {{ .Values.env.DB_PASSWORD | quote }}
+            - name: DB_HOST
+              value: {{ .Values.env.DB_HOST }}

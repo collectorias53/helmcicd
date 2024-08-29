@@ -1,0 +1,5 @@
+apiVersion: v2
+name: az-cas
+description: A Helm chart for deploying the az-cas application
+version: 0.1.0
+appVersion: "1.0"

@@ -1,0 +1,26 @@
+replicaCount: 1
+
+image:
+  repository: kubenet.azurecr.io/testcasimage
+  tag: latest
+  pullPolicy: IfNotPresent
+
+service:
+  type: LoadBalancer
+  port: 80
+  targetPort: 8000
+
+env:
+  AZURE_KEY_VAULT_URL: "https://testpasswordstore.vault.azure.net/"
+  DB_NAME: "postgres"
+  DB_USER: "akscasadmin"
+  DB_PASSWORD: "Tyc8Y#3!h392"
+  DB_HOST: "akscaspg.postgres.database.azure.com"
+
+autoscaling:
+  enabled: true
+  minReplicas: 1
+  maxReplicas: 3
+  targetCPUUtilizationPercentage: 80
+
+

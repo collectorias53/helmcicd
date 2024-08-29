@@ -19,7 +19,7 @@ steps:
     azureResourceGroupForACR: 'rgterra'
     azureContainerRegistry: 'kubeacr1.azurecr.io'
     command: 'package'
-    chartPath: 'https://github.com/collectorias53/helmcicd/tree/master/az-cas'
+    chartPath: '/home/vsts/work/1/s/az-cas'
     chartNameForACR: 'az-cas-helm'
     chartPathForACR: '$(System.DefaultWorkingDirectory)/drophelm/Charts/az-cas'
 - task: PublishPipelineArtifact@1

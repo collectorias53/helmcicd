@@ -39,7 +39,7 @@ stages:
         kubernetesCluster: 'akstf'
         command: 'upgrade'
         chartType: 'FilePath'
-        chartPath: '$(Pipeline.Workspace)/drophelm/Charts/az-cas'
+        chartPath: '$(System.DefaultWorkingDirectory)/drophelm/Charts/az-cas'
         releaseName: 'az-cas'
     
 
